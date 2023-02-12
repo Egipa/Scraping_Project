@@ -19,4 +19,4 @@ for book in page:
     for book_link in book.find_all('a'):
         book_url = book_link.get('href')
 
-    print(f'Book title: {title}, Rating: {rating},\n {a}, \n For more details visit page: {book_url}')
+    print(f'Book title: {title}, \n Rating: {rating}, {a}, \n For more details visit page: {book_url}')
