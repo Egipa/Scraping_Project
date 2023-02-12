@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
+import pprint
 
 url = "https://www.guru99.com/best-python-books.html"
 headers = {
@@ -11,12 +13,21 @@ response = requests.get(url, headers=headers)
 
 soup = BeautifulSoup(response.content, 'html.parser')
 page = soup.select('.lasso-box-1')
+page_title = soup.find("h1", class_="entry-title").text.upper()
+print(f'The list of "{page_title}" was saved to a file')
 
+book_list = []
 for book in page:
     title = book.find('a').text.strip().upper()
     rating = book.find('span').text.strip()
-    a = book.find('p').text.strip()
+    a = book.find('p').text.strip("Author Name:")
     for book_link in book.find_all('a'):
         book_url = book_link.get('href')
+    book_list.append((title, rating, a, book_url))
 
-    print(f'Book title: {title}, \n Rating: {rating}, {a}, \n For more details visit page: {book_url}')
+pprint.pprint(book_list)
+
+with open("book_list.csv", "w") as file:
+    writer = csv.writer(file)
+    writer.writerow(["Title", "Rating", "Author name", "url"])
+    writer.writerows(book_list)
